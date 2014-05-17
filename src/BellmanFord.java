@@ -1,13 +1,5 @@
 import java.util.Vector;
 
-class edge{
-	int weight,source,dest;
-	public edge(int source,int dest,int weight){
-		this.source = source;
-		this.dest = dest;
-		this.weight = weight;
-	}
-}
 
 public class BellmanFord {
 
@@ -20,6 +12,7 @@ public class BellmanFord {
 		//used[i] is if dist[i] has been initialized
 		boolean[] used = new boolean[n];
 		
+		//initialize dist[i]=0 and used[i]=false
 		for(int i=0;i<n;i++){
 			dist[i] = 0;
 			used[i] = false;
@@ -32,7 +25,9 @@ public class BellmanFord {
 				for(int k=0;k<adjList.get(j).size();k++){
 					if(!used[j])continue;
 					edge e = adjList.get(j).get(k);
+					//If dist[e.source] has been used
 					if(used[e.source]){
+						//If new dist < cur dist or not used, then update
 						int newDist = dist[e.source]+e.weight;
 						if(newDist<dist[e.dest] || !used[e.dest]){
 							used[e.dest]= true; 

@@ -1,19 +1,14 @@
 import java.util.PriorityQueue;
 
 
-class node{
-	int weight,index;
-	public node(int weight,int index){
-		this.weight = weight;
-		this.index = index;
-	}
-}
+
 
 public class Dijkstra {
 
 	
 
 	public static int dijkstra(int[][] adjMatrix,int start,int end){
+		
 		int n = adjMatrix.length;
 		PriorityQueue <node> pq = new PriorityQueue<node>();
 		

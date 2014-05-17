@@ -4,25 +4,23 @@ import java.util.Vector;
 
 public class FloydWarshall {
 
+	public static final int UNDEFINED = Integer.MIN_VALUE;
+	
 	public static int[][] FloydWarshall(Vector<Vector<edge>> adjList){
 		int n = adjList.size();
 		//dist[i][j] is the minimum distance from i to j
 		int[][] dist = new int[n][n];
-		//used[i][j] is if the dist from i to j has been used
-		boolean[][] used = new boolean[n][n];
 		
 		//initialize dist[i][j]
 		for(int i=0;i<n;i++){
 			for(int j=0;j<n;j++){
-				dist[i][j] = 0;
-				used[i][j] = false;
+				dist[i][j] = UNDEFINED;
 			}
 		}
 		
 		//dist[i][i] = 0
 		for(int i=0;i<n;i++){
 			dist[i][i]=0;
-			used[i][i]=true;
 		}
 		
 		//initialize weights, dist[i][j] = edge from i to j
@@ -31,7 +29,6 @@ public class FloydWarshall {
 				
 				edge e = adjList.get(i).get(j);
 				dist[e.source][e.dest] = e.weight;
-				used[e.source][e.dest] = true; 
 				
 				System.out.println(e.source+" "+e.dest);
 			}
@@ -41,12 +38,11 @@ public class FloydWarshall {
 			for(int i=0;i<n;i++){
 				for(int j=0;j<n;j++){
 					//If dist[i][k] and dist[k][j] have been set then use those values
-					if(used[i][k]&&used[k][j]){
+					if(dist[i][k]!=UNDEFINED&&dist[k][j]!=UNDEFINED){
 						//If the new distance is less than current or not used, then update
 						int newDist = dist[i][k]+dist[k][j];
-						if(dist[i][j] > newDist || !used[i][j]){
+						if(dist[i][j] > newDist || dist[i][j]==UNDEFINED){
 							dist[i][j] = newDist;
-							used[i][j] = true;
 						}
 					}
 				}
