@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 
 public class Arr {
 
@@ -26,7 +28,8 @@ public class Arr {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		LinkedList q = new LinkedList();
+		q.pop();
 	}
 
 }

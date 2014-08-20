@@ -1,6 +1,12 @@
 
 public class DFS {
 	
+	class Tree{
+		Tree left;
+		Tree right;
+		int value;
+		
+	}
 	
 	/**
 	 * Performs a DFS on a binary tree

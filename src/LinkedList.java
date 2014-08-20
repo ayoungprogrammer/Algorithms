@@ -1,54 +1,70 @@
+import java.util.NoSuchElementException;
+
 
 class Link{
 	int value;
 	Link next;
-	Link prev;
 	public Link(int value){
 		this.value = value;
 		this.next = null;
-		this.prev = null;
 	}
 }
 
 
 public class LinkedList {
 
-	public Link start;
+	public Link head;
+	public Link end;
 	public int size;
 	
 	public LinkedList(){
-		start = null;
+		head = null;
+		end = null;
 		size = 0;
 	}
 	/*
 	 * Creates a new node and adds it after the given node
 	 */
-	public void addAfterNode(int value, Link node){
-		if(start==null){
-			start = new Link(value);
-		}else {
-			Link nn = new Link(value);
-			nn.next = node.next;
-			node.next = nn;
+	public void insert(int value, Link cur){
+		Link newLink = new Link(value);
+		newLink.next = cur.next;
+		cur.next = newLink.next;
+		size++;
+	}
+	/*
+	 * Adds new node to head of linked list
+	 */
+	public void push(int value){
+		Link newLink = new Link(value);
+		if(size==0){
+			head = end = newLink;
+		}else{
+			end.next = newLink;
+			end = newLink;
 		}
 		size++;
 	}
 	/*
 	 * Adds new node to head of linked list
 	 */
-	public void addToHead(int value){
-		Link nn = new Link(value);
-		nn.next = start;
-		start.prev = nn;
-		start = nn;
-		size++;
+	public int pop(){
+		if(head==null){
+			throw new NoSuchElementException();
+		}
+		int ret = head.value;
+		head = head.next;
+		size--;
+		if(size==0){
+			end = null;
+		}
+		return ret;
 	}
 	/*
 	 * Gets the value at index
 	 */
 	public int get(int index){
 		int i = 0;
-		Link curNode = start;
+		Link curNode = head;
 		while(curNode!=null){
 			if(index==i){
 				return curNode.value;
@@ -56,24 +72,26 @@ public class LinkedList {
 			curNode = curNode.next;
 			i++;
 		}
-		throw new ArrayIndexOutOfBoundsException();
+		throw new NoSuchElementException();
 	}
 	/*
-	 * Deletes value at current node
+	 * Deletes node after specified
 	 */
-	public void delete(Link node){
-		if(node.prev!=null)node.prev.next = node.next;
-		if(node.next!=null)node.next.prev = node.prev;
+	public void deleteNext(Link node){
+		if(node.next==end){
+			end = node;
+		}
+		node.next = node.next.next;
 		size--;
 	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		LinkedList ll = new LinkedList();
-		ll.addToHead(3);
-		ll.addToHead(4);
-		ll.addToHead(5);
-		ll.addToHead(6);
+		ll.push(3);
+		ll.push(4);
+		ll.push(5);
+		ll.push(6);
 		for(int i=0;i<ll.size;i++){
 			System.out.println(ll.get(i));
 		}
