@@ -1,4 +1,4 @@
 Algorithms
 ==========
 
-Used in thecshandhook
+Used in http://www.thecshandbook.com
