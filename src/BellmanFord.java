@@ -2,6 +2,8 @@ import java.util.Vector;
 
 
 public class BellmanFord {
+    
+    public static int UNDEFINED = Integer.MIN_VALUE;
 
 	public static int BellmanFord(Vector<Vector<edge>> adjList,int startNode,int endNode){
 		
@@ -9,28 +11,22 @@ public class BellmanFord {
 		//dist[i] is minimum distance from start to i
 		int[] dist=new int[n];
 		
-		//used[i] is if dist[i] has been initialized
-		boolean[] used = new boolean[n];
-		
 		//initialize dist[i]=0 and used[i]=false
 		for(int i=0;i<n;i++){
-			dist[i] = 0;
-			used[i] = false;
+			dist[i] = UNDEFINED;
 		}
-		used[startNode] = true;
 		dist[startNode] = 0;
 		for(int i=0;i<n-1;i++){
 			//Iterate through adjacency list
 			for(int j=0;j<n;j++){
 				for(int k=0;k<adjList.get(j).size();k++){
-					if(!used[j])continue;
+				    if(dist[j] == UNDEFINED)continue;
 					edge e = adjList.get(j).get(k);
 					//If dist[e.source] has been used
-					if(used[e.source]){
+					if(dist[e.source] != UNDEFINED){
 						//If new dist < cur dist or not used, then update
 						int newDist = dist[e.source]+e.weight;
-						if(newDist<dist[e.dest] || !used[e.dest]){
-							used[e.dest]= true; 
+						if(newDist<dist[e.dest] || dist[e.dest] == UNDEFINED ){
 							dist[e.dest] = newDist;
 						}
 					}
@@ -49,7 +45,7 @@ public class BellmanFord {
 		}
 		
 		//If no path exists
-		if(!used[endNode]){
+		if(dist[endNode] == UNDEFINED){
 			System.out.println("No path from start to end");
 		}
 		

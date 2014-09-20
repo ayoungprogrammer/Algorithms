@@ -1,5 +1,4 @@
-import java.util.Arrays;
-import java.util.Vector;
+import java.util.NoSuchElementException;
 
 
 public class Vec {
@@ -25,6 +24,15 @@ public class Vec {
 		}
 		arr[size] = x;
 		size++;
+	}
+	
+	public int pop(){
+		if(size==0){
+			throw new NoSuchElementException();
+		}
+		int ret = arr[size];
+		size--;
+		return ret;
 	}
 	
 	public int get(int idx){
