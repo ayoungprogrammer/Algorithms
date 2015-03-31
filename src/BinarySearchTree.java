@@ -1,30 +1,31 @@
-public class TreeMap {
+public class BinarySearchTree {
 
-  class Node {
-    Pair pair;
+  public class Node {
+    int value;
     Node left;
     Node right;
     Node parent;
-
-    public Node(Pair p) {
-      this.pair = p;
+  
+    public Node(int val, Node parent) {
+      this.value = val;
       this.left = null;
       this.right = null;
-      this.parent = null;
+      this.parent = parent;
     }
-
+  
+    // Replaces the child node with the replacement one.
     public void replaceChild(Node child, Node replacement) {
+      // If replacing left child.
       if (left == child) {
         left = replacement;
-        if (replacement != null) {
-          replacement.parent = this;
-        }
       }
+      // If replacing right child.
       if (right == child) {
         right = replacement;
-        if (replacement != null) {
-          replacement.parent = this;
-        }
+      }
+      // Set replacement nodes parent.
+      if (replacement != null) {
+        replacement.parent = this;
       }
     }
   }
@@ -32,115 +33,139 @@ public class TreeMap {
   int size;
   Node root;
 
-  public TreeMap() {
+  public BinarySearchTree() {
     size = 0;
     root = null;
   }
 
-  public boolean insert(Pair p) {
+  public boolean insert(int x) {
+    // If root is missing.
     if (root == null) {
-      root = new Node(p);
+      root = new Node(x, null);
+      size = 1;
       return true;
     }
     Node curTree = root;
     while (curTree != null) {
-      if (p.key == curTree.pair.key) {
+      // Return if x already exists in set.
+      if (x == curTree.value) {
         return false;
       }
-      else if (p.key < curTree.pair.key) {
+      // Traverse left if x is less than current node.
+      else if (x < curTree.value) {
+        // If left child is empty, create new node.
         if (curTree.left == null) {
-          Node newTree = new Node(p);
-          newTree.parent = curTree;
-          curTree.left = newTree;
+          curTree.left = new Node(x, curTree);
+          size++;
           return true;
         }
+        // Traverse left child.
         curTree = curTree.left;
       }
+      // Traverse right otherwise.
       else {
+        // If right child is empty, create new node.
         if (curTree.right == null) {
-          Node newTree = new Node(p);
-          newTree.parent = curTree;
-          curTree.right = newTree;
+          curTree.right = new Node(x, curTree);
+          size++;
           return true;
         }
+        // Traverse right child.
         curTree = curTree.right;
       }
     }
     return false;
   }
 
-  public Pair get(int key) {
+  public boolean contains(int x) {
     Node curTree = root;
+    // Iterate through tree.
     while (curTree != null) {
-      if (key == curTree.pair.key) {
-        return curTree.pair;
+      // If found element return true.
+      if (x == curTree.value) {
+        return true;
       }
-      else if (key < curTree.pair.key) {
+      // Traverse left tree if x is less than current node.
+      else if (x < curTree.value) {
         curTree = curTree.left;
       }
+      // Traverse right tree if x is greater then current node.
       else {
         curTree = curTree.right;
       }
     }
-    return null;
+    // Return false if not found.
+    return false;
   }
 
-  public boolean remove(int key) {
-    // Get node to remove
+  public boolean remove(int x) {
+    // Node to be removed.
     Node curNode = root;
+  
+    // Traverse through binary tree.
     while (curNode != null) {
-      if (key == curNode.pair.key) {
+      // If found element, use node.
+      if (x == curNode.value) {
         break;
       }
-      else if (key < curNode.pair.key) {
+      // Traverse through left child.
+      else if (x < curNode.value) {
         curNode = curNode.left;
       }
+      // Traverse through right child.
       else {
         curNode = curNode.right;
       }
     }
+    // If node was not found, return false.
     if (curNode == null) {
       return false;
     }
-    // Case 1: leaf node
+    // Case 1: Removed node has no children.
     if (curNode.left == null && curNode.right == null) {
-      // if root
+      // Special case if root.
       if (curNode == root) {
         this.root = null;
       }
+      // Replace node with null.
       else {
         curNode.parent.replaceChild(curNode, null);
       }
     }
-    // Case 2: one child
+    // Case 2: Removed node only has a right child.
     else if (curNode.left == null) {
-      // If root
+      // Special case if node is root.
       if (curNode == root) {
         root = curNode.right;
         root.parent = null;
       }
+      // Replace current node with right child.
       else {
         curNode.parent.replaceChild(curNode, curNode.right);
       }
     }
+    // Case 2: Removed node only has a left child.
     else if (curNode.right == null) {
-      // If root
+      // Special case if node is root.
       if (curNode == root) {
         root = curNode.left;
         root.parent = null;
       }
+      // Replace current node with left child.
       else {
         curNode.parent.replaceChild(curNode, curNode.left);
       }
     }
-    // Case 3: two children
+    // Case 3: Removed node has two children.
     else {
-      // Get rightmost of left subtree
+      // Get rightmost of left subtree.
       Node rightmost = curNode.left;
       while (rightmost.right != null) {
         rightmost = rightmost.right;
       }
-      curNode.pair = rightmost.pair;
+      // Copy rightmost of left subtree to removed node's.
+      curNode.value = rightmost.value;
+      // Replace rightmost of left subtree with left child.
       rightmost.parent.replaceChild(rightmost, rightmost.left);
     }
     size--;
@@ -152,9 +177,12 @@ public class TreeMap {
       return "";
     }
     String ret = "";
+    // Print left child.
     ret += dfs(curTree.left);
-    ret += '(' + curTree.pair.key + ',' + curTree.pair.value + ')';
+    // Print current node.
+    ret += curTree.value;
     ret += ",";
+    // Print right child.
     ret += dfs(curTree.right);
     return ret;
   }
